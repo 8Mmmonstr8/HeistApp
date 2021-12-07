@@ -23,27 +23,7 @@ public class MemberServiceImpl implements MemberService {
     SkillRepository skillRepository;
 
     @Override
-    @Transactional
     public Member save(Member newMember) {
-        List<Skill> skillList = new ArrayList<>();
-        for (MemberSkill x : newMember.getSkills()) {
-            skillList.add(skillRepository.save(x.getSkill()));
-        }
-        Member savedMember = memberRepository.save(newMember);
-
-        List<MemberSkill> newMemberSkills = new ArrayList<>();
-        for (Skill skill : skillList) {
-            newMemberSkills.add(new MemberSkill(savedMember, skill,
-                    newMember.getSkills().stream()
-                            .filter(x -> x.getSkill().getName().equals(skill.getName()))
-                            .findFirst().get().getLevel()));
-        }
-        savedMember.setSkills(newMemberSkills);
-        for (Skill x : skillList) {
-            x.setMembers(newMemberSkills);
-            skillRepository.save(x);
-        }
-
-        return memberRepository.save(savedMember);
+        return memberRepository.save(newMember);
     }
 }

@@ -11,4 +11,9 @@ public class MemberSkillDTO {
 
     @Pattern(regexp = "^\\*{1,10}$", message = "Should be only asterisk from 1 to 10")
     private String level;
+
+    public MemberSkillDTO(String name, String level) {
+        this.name = name;
+        this.level = level;
+    }
 }

@@ -28,7 +28,9 @@ public class Member {
     @Column(unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<MemberSkill> skills;
 
     @ManyToOne(fetch = FetchType.LAZY)
