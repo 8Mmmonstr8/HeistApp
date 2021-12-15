@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ua.hubanov.heist.dto.MemberDTO;
-import ua.hubanov.heist.facade.MemberFacade;
+import ua.hubanov.heist.service.MemberService;
 
 import javax.validation.Valid;
 
@@ -15,11 +15,11 @@ import javax.validation.Valid;
 public class MemberController {
 
     @Autowired
-    MemberFacade memberFacade;
+    MemberService memberService;
 
     @PostMapping("/member")
-    public ResponseEntity<String> create(@Valid @RequestBody MemberDTO newMember) {
-        return new ResponseEntity<>("Header: localhost:8080/member/" + memberFacade.save(newMember).getId(),
+    public ResponseEntity<String> createMember(@Valid @RequestBody MemberDTO newMember) {
+        return new ResponseEntity<>("Header: localhost:8080/member/" + memberService.createMember(newMember),
                 HttpStatus.CREATED);
     }
 }

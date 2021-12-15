@@ -4,7 +4,8 @@ import lombok.Data;
 import ua.hubanov.heist.entity.enums.Sex;
 import ua.hubanov.heist.entity.enums.Status;
 
-import javax.validation.constraints.Pattern;
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -18,9 +19,10 @@ public class MemberDTO {
 
     private Sex sex;
 
-    @Pattern(regexp = "^(.+)@(.+)$", message = "Email is invalid")
+    @Email
     private String email;
 
+    @Valid
     private List<MemberSkillDTO> skills;
 
     private String mainSkill;

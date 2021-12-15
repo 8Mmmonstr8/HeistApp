@@ -7,6 +7,7 @@ import ua.hubanov.heist.entity.enums.Sex;
 import ua.hubanov.heist.entity.enums.Status;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -31,7 +32,7 @@ public class Member {
     @OneToMany(mappedBy = "member",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private List<MemberSkill> skills;
+    private List<MemberSkill> skills = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Skill mainSkill;
@@ -50,5 +51,15 @@ public class Member {
         this.skills = skills;
         this.mainSkill = mainSkill;
         this.status = status;
+    }
+
+    public void removeAllSkills() {
+        this.skills.removeAll(getSkills());
+    }
+
+    public void addSkill(Skill skill, String level) {
+        MemberSkill newMemberSkill = new MemberSkill(this, skill, level);
+        skills.add(newMemberSkill);
+        skill.getMembers().add(newMemberSkill);
     }
 }

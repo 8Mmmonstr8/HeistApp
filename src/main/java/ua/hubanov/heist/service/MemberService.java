@@ -1,8 +1,8 @@
 package ua.hubanov.heist.service;
 
-import ua.hubanov.heist.entity.Member;
+import ua.hubanov.heist.dto.MemberDTO;
 
 public interface MemberService {
 
-    Member save(Member newMember);
+    Long createMember(MemberDTO newMember);
 }
