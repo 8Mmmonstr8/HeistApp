@@ -3,10 +3,9 @@ package ua.hubanov.heist.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.hubanov.heist.dto.MemberDTO;
+import ua.hubanov.heist.dto.SkillsDTO;
 import ua.hubanov.heist.entity.Member;
-import ua.hubanov.heist.entity.Skill;
-import ua.hubanov.heist.exception.MemberException;
-import ua.hubanov.heist.exception.SkillException;
+import ua.hubanov.heist.exception.MemberAlreadyExistsException;
 import ua.hubanov.heist.mapper.MemberMapper;
 import ua.hubanov.heist.repository.MemberRepository;
 import ua.hubanov.heist.service.MemberService;
@@ -27,31 +26,35 @@ public class MemberServiceImpl implements MemberService {
     MemberMapper memberMapper;
 
     @Override
+    public Member findById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberAlreadyExistsException(String.format("Member with id: %s not exist", memberId)));
+    }
+
+    @Override
     @Transactional
     public Long createMember(MemberDTO memberDTO) {
         checkMemberForExistence(memberDTO);
+        Member savedMember = memberRepository.save(memberMapper.toEntity(memberDTO));
 
-        Member newMember = memberMapper.toEntity(memberDTO);
-
-        newMember.setMainSkill(skillService.saveOrReturn(
-                memberDTO.getSkills().stream()
-                        .filter(memberSkill -> memberSkill.getName().equalsIgnoreCase(memberDTO.getMainSkill()))
-                        .findFirst().orElseThrow(() -> new SkillException("Main skill must be in skill array"))
-                        .getName().toLowerCase()));
-
-        Member savedMember = memberRepository.save(newMember);
-
-        memberDTO.getSkills().forEach(memberSkillDTO -> {
-            Skill skill = skillService.saveOrReturn(memberSkillDTO.getName().toLowerCase());
-            savedMember.addSkill(skill, memberSkillDTO.getLevel());
-        });
+        skillService.addNewSkillsToMember(savedMember, memberDTO.getSkills(), memberDTO.getMainSkill());
 
         return savedMember.getId();
     }
 
+    @Override
+    @Transactional
+    public Long updateMemberSkills(Long memberId, SkillsDTO newSkills) {
+        Member member = findById(memberId);
+
+        skillService.updateMemberSkills(member, newSkills);
+
+        return member.getId();
+    }
+
     private void checkMemberForExistence(MemberDTO memberDTO) {
         if (memberRepository.findByEmail(memberDTO.getEmail()).isPresent()) {
-            throw new MemberException("Member already exists with Email: " + memberDTO.getEmail());
+            throw new MemberAlreadyExistsException("Member already exists with Email: " + memberDTO.getEmail());
         }
     }
 }

@@ -8,6 +8,7 @@ import ua.hubanov.heist.entity.enums.Status;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Getter
@@ -53,8 +54,23 @@ public class Member {
         this.status = status;
     }
 
-    public void removeAllSkills() {
-        this.skills.removeAll(getSkills());
+    public void removeSkills(List<Skill> skills) {
+        skills.forEach(this::removeSkill);
+    }
+
+    public void removeSkill(Skill skill) {
+        for (Iterator<MemberSkill> iterator = skills.iterator();
+             iterator.hasNext(); ) {
+            MemberSkill memberSkill = iterator.next();
+
+            if (memberSkill.getMember().equals(this) &&
+                    memberSkill.getSkill().equals(skill)) {
+                iterator.remove();
+                memberSkill.getSkill().getMembers().remove(memberSkill);
+                memberSkill.setMember(null);
+                memberSkill.setSkill(null);
+            }
+        }
     }
 
     public void addSkill(Skill skill, String level) {
