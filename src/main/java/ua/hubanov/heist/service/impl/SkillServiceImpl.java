@@ -11,6 +11,7 @@ import ua.hubanov.heist.exception.SkillException;
 import ua.hubanov.heist.repository.SkillRepository;
 import ua.hubanov.heist.service.SkillService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,9 +29,11 @@ public class SkillServiceImpl implements SkillService {
 
     @Override
     public Member addNewSkillsToMember(Member member, List<MemberSkillDTO> newMemberSkills, String mainSkill) {
+        checkSkills(newMemberSkills);
+
         List<String> memberSkillsNames = member.getSkills().stream()
-                        .map(memberSkill -> memberSkill.getSkill().getName())
-                                .collect(Collectors.toList());
+                .map(memberSkill -> memberSkill.getSkill().getName())
+                .collect(Collectors.toList());
 
         member.setMainSkill(saveOrReturn(
                 newMemberSkills.stream()
@@ -77,5 +80,17 @@ public class SkillServiceImpl implements SkillService {
                 .collect(Collectors.toList());
 
         member.removeSkills(skillsToDelete);
+    }
+
+    private void checkSkills(List<MemberSkillDTO> newMemberSkills) {
+        List<String> skillNames = newMemberSkills.stream()
+                .map(MemberSkillDTO::getName)
+                .collect(Collectors.toList());
+        skillNames.stream()
+                .filter(name -> Collections.frequency(skillNames, name) > 1)
+                .findAny()
+                .ifPresent(name -> {
+                    throw new SkillException(String.format("Skill with name: '%s' is duplicated in array", name));
+                });
     }
 }

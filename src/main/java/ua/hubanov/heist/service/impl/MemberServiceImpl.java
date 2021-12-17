@@ -6,6 +6,7 @@ import ua.hubanov.heist.dto.MemberDTO;
 import ua.hubanov.heist.dto.SkillsDTO;
 import ua.hubanov.heist.entity.Member;
 import ua.hubanov.heist.exception.MemberAlreadyExistsException;
+import ua.hubanov.heist.exception.MemberNotFoundException;
 import ua.hubanov.heist.mapper.MemberMapper;
 import ua.hubanov.heist.repository.MemberRepository;
 import ua.hubanov.heist.service.MemberService;
@@ -28,7 +29,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member findById(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberAlreadyExistsException(String.format("Member with id: %s not exist", memberId)));
+                .orElseThrow(() -> new MemberNotFoundException(String.format("Member with id: %s not exist", memberId)));
     }
 
     @Override
@@ -36,9 +37,7 @@ public class MemberServiceImpl implements MemberService {
     public Long createMember(MemberDTO memberDTO) {
         checkMemberForExistence(memberDTO);
         Member savedMember = memberRepository.save(memberMapper.toEntity(memberDTO));
-
         skillService.addNewSkillsToMember(savedMember, memberDTO.getSkills(), memberDTO.getMainSkill());
-
         return savedMember.getId();
     }
 
@@ -46,9 +45,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public Long updateMemberSkills(Long memberId, SkillsDTO newSkills) {
         Member member = findById(memberId);
-
         skillService.updateMemberSkills(member, newSkills);
-
         return member.getId();
     }
 
