@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class SkillException extends RuntimeException {
+public class MemberAlreadyExistsException extends RuntimeException {
 
-    public SkillException(String message) {
+    public MemberAlreadyExistsException(String message) {
         super(message);
     }
 }
