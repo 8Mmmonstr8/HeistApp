@@ -27,4 +27,10 @@ public class MemberController {
         return new ResponseEntity<>(String.format("Header: localhost:8080/member/%s/skills",
                 memberService.updateMemberSkills(memberId, skills)), HttpStatus.NO_CONTENT);
     }
+
+    @DeleteMapping("/member/{memberId}/skills/{skillName}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteMemberSkill(@PathVariable Long memberId, @PathVariable String skillName) {
+        memberService.deleteMemberSkill(memberId, skillName);
+    }
 }
