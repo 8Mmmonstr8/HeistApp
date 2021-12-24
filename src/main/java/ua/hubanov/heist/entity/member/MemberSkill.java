@@ -1,9 +1,10 @@
-package ua.hubanov.heist.entity;
+package ua.hubanov.heist.entity.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import ua.hubanov.heist.entity.Skill;
 
 import javax.persistence.*;
 

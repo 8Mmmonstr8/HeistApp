@@ -3,6 +3,8 @@ package ua.hubanov.heist.entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import ua.hubanov.heist.entity.heist.HeistSkill;
+import ua.hubanov.heist.entity.member.MemberSkill;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -28,6 +30,13 @@ public class Skill {
             orphanRemoval = true
     )
     private List<MemberSkill> members = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "skill",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<HeistSkill> heists = new ArrayList<>();
 
     public Skill() {
     }

@@ -1,8 +1,8 @@
 package ua.hubanov.heist.service;
 
-import ua.hubanov.heist.dto.MemberDTO;
 import ua.hubanov.heist.dto.SkillsDTO;
-import ua.hubanov.heist.entity.Member;
+import ua.hubanov.heist.dto.member.MemberDTO;
+import ua.hubanov.heist.entity.member.Member;
 
 public interface MemberService {
 

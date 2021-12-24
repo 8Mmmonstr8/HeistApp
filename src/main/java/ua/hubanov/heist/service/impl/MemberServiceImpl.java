@@ -2,10 +2,10 @@ package ua.hubanov.heist.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.hubanov.heist.dto.MemberDTO;
 import ua.hubanov.heist.dto.SkillsDTO;
-import ua.hubanov.heist.entity.Member;
+import ua.hubanov.heist.dto.member.MemberDTO;
 import ua.hubanov.heist.entity.Skill;
+import ua.hubanov.heist.entity.member.Member;
 import ua.hubanov.heist.exception.MemberAlreadyExistsException;
 import ua.hubanov.heist.exception.MemberNotFoundException;
 import ua.hubanov.heist.mapper.MemberMapper;

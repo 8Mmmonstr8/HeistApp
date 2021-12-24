@@ -1,8 +1,9 @@
-package ua.hubanov.heist.entity;
+package ua.hubanov.heist.entity.member;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import ua.hubanov.heist.entity.Skill;
 import ua.hubanov.heist.entity.enums.Sex;
 import ua.hubanov.heist.entity.enums.Status;
 

@@ -2,7 +2,7 @@ package ua.hubanov.heist.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ua.hubanov.heist.entity.Member;
+import ua.hubanov.heist.entity.member.Member;
 
 import java.util.Optional;
 

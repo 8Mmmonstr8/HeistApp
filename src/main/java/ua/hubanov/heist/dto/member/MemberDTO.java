@@ -1,4 +1,4 @@
-package ua.hubanov.heist.dto;
+package ua.hubanov.heist.dto.member;
 
 import lombok.Data;
 import ua.hubanov.heist.entity.enums.Sex;

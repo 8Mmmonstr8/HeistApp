@@ -5,9 +5,11 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
+import ua.hubanov.heist.dto.heist.HeistDTO;
 import ua.hubanov.heist.dto.member.MemberDTO;
 import ua.hubanov.heist.dto.member.MemberSkillDTO;
 import ua.hubanov.heist.entity.Skill;
+import ua.hubanov.heist.entity.heist.Heist;
 import ua.hubanov.heist.entity.member.Member;
 import ua.hubanov.heist.entity.member.MemberSkill;
 
@@ -15,16 +17,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
-public abstract class MemberMapper {
+public abstract class HeistMapper {
 
     @Autowired
     SkillMapper skillMapper;
 
-    @Mappings({
-            @Mapping(target = "mainSkill", ignore = true),
-            @Mapping(target = "skills", ignore = true)
-    })
-    public abstract Member toEntity(MemberDTO memberDTO);
+    @Mapping(target = "skills", ignore = true)
+    public abstract Heist toEntity(HeistDTO heistDTO);
 
     @Mappings({
             @Mapping(target = "mainSkill", source = "mainSkill", qualifiedByName = "mapSkillToName"),
@@ -41,4 +40,5 @@ public abstract class MemberMapper {
     List<MemberSkillDTO> mapSkills(List<MemberSkill> skills) {
         return skills.stream().map(skillMapper::toDto).collect(Collectors.toList());
     }
+
 }

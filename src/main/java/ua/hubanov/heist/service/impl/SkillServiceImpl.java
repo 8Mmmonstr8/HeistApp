@@ -2,18 +2,19 @@ package ua.hubanov.heist.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.hubanov.heist.dto.MemberSkillDTO;
 import ua.hubanov.heist.dto.SkillsDTO;
-import ua.hubanov.heist.entity.Member;
-import ua.hubanov.heist.entity.MemberSkill;
+import ua.hubanov.heist.dto.heist.HeistSkillDTO;
+import ua.hubanov.heist.dto.member.MemberSkillDTO;
 import ua.hubanov.heist.entity.Skill;
+import ua.hubanov.heist.entity.heist.Heist;
+import ua.hubanov.heist.entity.member.Member;
+import ua.hubanov.heist.entity.member.MemberSkill;
 import ua.hubanov.heist.exception.SkillException;
 import ua.hubanov.heist.exception.SkillNotFoundException;
 import ua.hubanov.heist.repository.SkillRepository;
 import ua.hubanov.heist.service.SkillService;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -100,5 +101,68 @@ public class SkillServiceImpl implements SkillService {
                 .ifPresent(name -> {
                     throw new SkillException(String.format("Skill with name: '%s' is duplicated in array", name));
                 });
+    }
+
+    @Override
+    public Heist addNewSkillsToHeist(Heist heist, List<HeistSkillDTO> skills) {
+        checkHeistSkills(skills);
+
+        List<String> heistSkillsNames = heist.getSkills().stream()
+                .map(heistSkill -> heistSkill.getSkill().getName())
+                .collect(Collectors.toList());
+
+        skills.forEach(heistSkillDTO -> {
+            Skill skill = saveOrReturn(heistSkillDTO.getName().toLowerCase());
+            if (!heistSkillsNames.contains(skill.getName())) {
+                heist.addSkill(skill, heistSkillDTO.getLevel(), heistSkillDTO.getMembers());
+            }
+        });
+
+        return heist;
+    }
+
+    private void checkHeistSkills(List<HeistSkillDTO> skills) {
+//        List<String> skillNames = skills.stream()
+//                .map(HeistSkillDTO::getName)
+//                .collect(Collectors.toList());
+//        skillNames.stream()
+//                .filter(name -> Collections.frequency(skillNames, name) > 1)
+//                .findAny()
+//                .ifPresent(name -> {
+//                    List<String> levels = new ArrayList<>();
+//                    skills.stream()
+//                            .filter(skill -> skill.getName().equalsIgnoreCase(name))
+//                            .peek(skill -> levels.add(skill.getLevel()))
+//                            .filter(skill -> Collections.frequency(levels, skill.getLevel()) > 1)
+//                            .findAny()
+//                            .ifPresent(skill -> {
+//                                throw new SkillException(String.format(
+//                                        "Skill with name: '%s' and level: '%s' is duplicated in array",
+//                                        skill.getName(), skill.getLevel()));
+//                            });
+//                });
+
+//        Map<String, List<String>> skillsWithLevelsMap = new HashMap<>();
+//
+//        for (HeistSkillDTO skill : skills) {
+//            if (!skillsWithLevelsMap.containsKey(skill.getName())) {
+//                skillsWithLevelsMap.put(skill.getName(),
+//                        skills.stream()
+//                                .filter(s -> s.getName().equalsIgnoreCase(skill.getName()))
+//                                .map(HeistSkillDTO::getLevel)
+//                                .collect(Collectors.toList()));
+//            }
+//        }
+//
+//        skillsWithLevelsMap.forEach((name, levels) -> levels.stream()
+//                .filter(x -> Collections.frequency(levels, x) > 1)
+//                .findAny()
+//                .ifPresent(level -> {
+//                    throw new SkillException(String.format(
+//                                        "Skill with name: '%s' and level: '%s' is duplicated in array",
+//                                        name, level));
+//                    })
+//
+//        );
     }
 }

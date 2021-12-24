@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.hubanov.heist.dto.MemberDTO;
 import ua.hubanov.heist.dto.SkillsDTO;
+import ua.hubanov.heist.dto.member.MemberDTO;
 import ua.hubanov.heist.service.MemberService;
 
 import javax.validation.Valid;

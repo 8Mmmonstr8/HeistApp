@@ -1,6 +1,7 @@
 package ua.hubanov.heist.dto;
 
 import lombok.Data;
+import ua.hubanov.heist.dto.member.MemberSkillDTO;
 
 import javax.validation.Valid;
 import java.util.List;
