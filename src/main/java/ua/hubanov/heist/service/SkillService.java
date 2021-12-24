@@ -14,4 +14,6 @@ public interface SkillService {
     Member addNewSkillsToMember(Member member, List<MemberSkillDTO> memberSkills, String mainSkill);
 
     Member updateMemberSkills(Member member, SkillsDTO newSkills);
+
+    Skill findByName(String skillName);
 }

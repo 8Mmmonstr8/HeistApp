@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ua.hubanov.heist.dto.MemberDTO;
 import ua.hubanov.heist.dto.SkillsDTO;
 import ua.hubanov.heist.entity.Member;
+import ua.hubanov.heist.entity.Skill;
 import ua.hubanov.heist.exception.MemberAlreadyExistsException;
 import ua.hubanov.heist.exception.MemberNotFoundException;
 import ua.hubanov.heist.mapper.MemberMapper;
@@ -13,6 +14,7 @@ import ua.hubanov.heist.service.MemberService;
 import ua.hubanov.heist.service.SkillService;
 
 import javax.transaction.Transactional;
+import java.util.Comparator;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -47,6 +49,25 @@ public class MemberServiceImpl implements MemberService {
         Member member = findById(memberId);
         skillService.updateMemberSkills(member, newSkills);
         return member.getId();
+    }
+
+    @Override
+    @Transactional
+    public void deleteMemberSkill(Long memberId, String skillName) {
+        Member member = findById(memberId);
+        Skill skill = skillService.findByName(skillName);
+        member.removeSkill(skill);
+
+        if (skill.equals(member.getMainSkill())) {
+            if (member.getSkills().size() > 1) {
+                Skill newMainSkill = member.getSkills().stream()
+                        .max(Comparator.comparingInt(s -> s.getLevel().length()))
+                        .get().getSkill();
+                member.setMainSkill(newMainSkill);
+            } else {
+                member.setMainSkill(null);
+            }
+        }
     }
 
     private void checkMemberForExistence(MemberDTO memberDTO) {

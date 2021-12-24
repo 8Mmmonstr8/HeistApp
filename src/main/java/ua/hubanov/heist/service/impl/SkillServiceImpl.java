@@ -8,6 +8,7 @@ import ua.hubanov.heist.entity.Member;
 import ua.hubanov.heist.entity.MemberSkill;
 import ua.hubanov.heist.entity.Skill;
 import ua.hubanov.heist.exception.SkillException;
+import ua.hubanov.heist.exception.SkillNotFoundException;
 import ua.hubanov.heist.repository.SkillRepository;
 import ua.hubanov.heist.service.SkillService;
 
@@ -25,6 +26,13 @@ public class SkillServiceImpl implements SkillService {
     public Skill saveOrReturn(String name) {
         return skillRepository.findByName(name)
                 .orElseGet(() -> skillRepository.save(new Skill(name)));
+    }
+
+    @Override
+    public Skill findByName(String skillName) {
+        return skillRepository.findByName(skillName)
+                .orElseThrow(() -> new SkillNotFoundException(
+                        String.format("Skill with name '%s' is not exists", skillName)));
     }
 
     @Override

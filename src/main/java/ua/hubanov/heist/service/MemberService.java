@@ -12,4 +12,5 @@ public interface MemberService {
 
     Long updateMemberSkills(Long memberId, SkillsDTO newSkills);
 
+    void deleteMemberSkill(Long memberId, String skillName);
 }
